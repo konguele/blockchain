@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Prueba blockchain
 @Author: JuanJo García
 """
 
@@ -29,5 +30,6 @@ class Blockchain:
     
     def get_previous_block(self):
         return self.chain[-1]
+    
 
 # Parte 2 - Minado de un bloque de la cadena
