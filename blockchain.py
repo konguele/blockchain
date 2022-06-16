@@ -37,7 +37,7 @@ class Blockchain:
         while check_proof is False:
             # En la versión final añadiremos una variable que aleatoriamente elija la longitud de caracteres a buscar y otro que elija aleatoriamente los caracteres a buscar
             # Utilizar polinomios más complicados para dificultar el minado
-            hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2),encode()).hexdigest()
+            hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
             if hash_operation[:4] == '0000':
                 check_proof = True
             else:
@@ -57,7 +57,7 @@ class Blockchain:
                 return False
             previous_proof = previous_block['proof']
             current_proof = current_block['proof']
-            hash_operation = hashlib.sha256(str(current_proof**2 - previous_proof**2),encode()).hexdigest()
+            hash_operation = hashlib.sha256(str(current_proof**2 - previous_proof**2).encode()).hexdigest()
             if hash_operation[:4] != '0000':
                 return False
             previous_block = current_block
@@ -65,3 +65,39 @@ class Blockchain:
         return True
     
 # Parte 2 - Minado de un bloque de la cadena
+
+# 1- Creamos una app web
+app = Flask(__name__)
+
+# 2- Crear una blockchain
+blockchain = Blockchain()
+
+# 3- Minar un nuevo bloque
+@app.route('/mine_block', methods=['GET'])
+def mine_block():
+    previous_block = blockchain.get_previous_block()
+    previous_proof = previous_block['proof']
+    proof = blockchain.proof_of_work(previous_proof)
+    previous_hash = blockchain.hash(previous_block)
+    block = blockchain.create_block(proof, previous_hash)
+    response = {'message' : 'Enhorabuena, has minado un nuevo bloque!',
+                'index': block['index'],
+                'timestamp' : block['timestamp'],
+                'proof' : block['proof'],
+                'previous_hash' : block['previous_hash']}
+    return jsonify(response), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
